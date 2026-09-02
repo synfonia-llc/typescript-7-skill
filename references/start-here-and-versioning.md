@@ -30,8 +30,8 @@ Names:
 | **Corsa** | Internal name for the Go port |
 | **Strada** | The JS implementation (6.0 line) and its `import "typescript"` API |
 | **tsgo** | Preview executable; GA ships `tsc` |
-| **native-preview** | Preview npm package / extension publisher id. GA install is `typescript@^7.0.2` |
-| **7.1** | Planned stable **programmatic API** (not in 7.0). Aimed ~3–4 months after 7.0 |
+| **native-preview** | Preview npm package / extension publisher id. This skill's exact GA pin is `typescript@7.0.2` |
+| **Later native API** | Announced as new and different; not present in 7.0 and outside this skill's pin |
 
 This skill’s pin: bundled **7.0.2**, extension `TypeScriptTeam.native-preview` **0.20260708.2**. [sources.md](sources.md).
 
@@ -40,8 +40,8 @@ Compatibility sentence from the 7.0 blog: code that compiles on 6.0 with `stable
 ## Which binary
 
 ```text
-npx tsc --version          # must print Version 7.x.x for this skill
-npx tsc6 --version         # 6.x, only if dual-stacked
+<compilerPath-from-probe> --version        # must print Version 7.x.x
+<stradaCompilerPath-from-probe> --version  # 6.x, only if dual-stacked
 ```
 
 `import * as ts from "typescript"` loads **Strada**, even in a repo whose `tsc` is 7, if `package.json` aliased `typescript` to `@typescript/typescript6`. That is intentional for eslint. Do not treat that import as the native compiler. [no-compiler-api.md](no-compiler-api.md).

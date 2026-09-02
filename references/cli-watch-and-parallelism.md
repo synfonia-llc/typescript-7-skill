@@ -2,7 +2,7 @@
 
 ## Scope
 
-How to run native `tsc` on 7.0.2. The **only** 7.0-new flags this skill documents: `--checkers`, `--builders`, `--singleThreaded`. Everything else: `npx tsc --help`. Watcher: Go port of Parcel’s watcher.
+How to run native `tsc` on 7.0.2. The **only** 7.0-new flags this skill documents: `--checkers`, `--builders`, `--singleThreaded`. For everything else, invoke the exact `compilerPath` returned by the probe with `--help`. Watcher: Go port of Parcel’s watcher.
 
 ## Contents
 
@@ -17,7 +17,7 @@ How to run native `tsc` on 7.0.2. The **only** 7.0-new flags this skill document
 
 ## Task routes
 
-- USE WHEN running typecheck or emit — `npx tsc` from the project, same binary the probe used.
+- USE WHEN running typecheck or emit — prefer a verified project script; otherwise invoke the probe's absolute `compilerPath` directly after it reports `ready`.
 - USE WHEN CI RAM spikes or you have many cores — tune `--checkers` / `--builders`; know they **multiply**.
 - USE WHEN debugging a heisenbug vs 6.0 — `--singleThreaded` and a fixed `--checkers` count.
 - USE WHEN `tsc file.ts` fails because a tsconfig is in cwd — pass `--ignoreConfig` or use `-p`.
@@ -25,13 +25,18 @@ How to run native `tsc` on 7.0.2. The **only** 7.0-new flags this skill document
 ## Ordinary tsc
 
 ```text
-npx tsc
-npx tsc -p tsconfig.json --pretty false
-npx tsc --noEmit
-npx tsc --build
-npx tsc --showConfig
-npx tsc --help
+<compilerPath-from-probe>
+<compilerPath-from-probe> -p tsconfig.json --pretty false
+<compilerPath-from-probe> --noEmit
+<compilerPath-from-probe> --build
+<compilerPath-from-probe> --showConfig
+<compilerPath-from-probe> --help
 ```
+
+Substitute the exact absolute path from the probe result. In PowerShell, invoke
+a quoted path with `& '<compilerPath>'`; in POSIX shells, invoke
+`'<compilerPath>'`. If the probe did not return `ready`, do not run these
+commands.
 
 If cwd has a `tsconfig.json`, passing extra file paths is a **hard error** unless `--ignoreConfig`. That is a 7.0 enforcement of a 6.0 deprecation.
 

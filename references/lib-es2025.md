@@ -9,7 +9,7 @@ Globals typed when `"lib"` includes `es2025` (the 7.0 default `target`). Summari
 - [Task routes](#task-routes)
 - [What es2025 adds over es2024](#what-es2025-adds-over-es2024)
 - [Iterator helpers](#iterator-helpers)
-- [Promise.try](#promisettry)
+- [Promise.try](#promisetry)
 - [Float16Array](#float16array)
 - [Set algebra](#set-algebra)
 - [RegExp.escape](#regexpescape)
@@ -36,7 +36,9 @@ On `Iterator` / `IteratorConstructor` (es2025.iterator), summarized:
 
 These are **iterator helpers**, not `Array.prototype`. `array.values().map(...)` typechecks if `Iterator` is in lib; `[].map` is still the array method.
 
-Not every Node 22 build implements them. Do not emit because the type exists.
+Node 22 ships iterator helpers through V8 12.4. Other runtimes and older Node
+majors may not; confirm the project's minimum runtime instead of inferring
+support from the TypeScript lib alone.
 
 ## Promise.try
 

@@ -37,7 +37,7 @@ Lib names are types, not a runtime guarantee ([lib-inventory.md](lib-inventory.m
 
 ## The write loop
 
-1. **Probe.** From the TypeScript project directory, run `node <skill-root>/scripts/probe.mjs`. Do not read the script. If `looks-like-typescript-7` is `NO`, fix the install ([install-and-dual-stack.md](install-and-dual-stack.md)) before writing code.
+1. **Probe.** From the TypeScript project directory, run `node <skill-root>/scripts/probe.mjs --json`. Do not read the script. Continue on `ready`; on any compiler/sidecar mismatch or missing-install status, fix the declared install ([install-and-dual-stack.md](install-and-dual-stack.md)) before writing code.
 2. **Pick one construct.** Open the single language page that names the thing you are about to write (function, module, class, JSDoc, …). Do not load the whole `references/` tree.
 3. **Emit 7.0-legal source.** Prefer explicit types on exported surfaces. Under `verbatimModuleSyntax`, mark type-only imports with `import type` / `import { type … }`. Under `nodenext`, write ESM specifiers the way Node resolves them (usually the emitted `.js` extension). See [modules-imports-and-exports.md](modules-imports-and-exports.md).
 4. **Run `tsc`.** Same binary the probe used. Fix from the diagnostic, not from a guessed tsconfig knob.
@@ -54,7 +54,7 @@ Unless `tsc --showConfig` says otherwise, assume:
 - `rootDir` is the **tsconfig directory** — files under `src/` emit to `dist/src/` unless `"rootDir": "./src"`.
 - `noUncheckedSideEffectImports` is **true** — `import "./side-effect"` must resolve.
 - `esModuleInterop` / `allowSyntheticDefaultImports` cannot be **false**; `alwaysStrict` cannot be **false**.
-- `asserts` on imports is illegal — write `with { type: "json" }`.
+- Import assertions using `assert { type: "json" }` are illegal — write import attributes with `with { type: "json" }`.
 - `module` as a **namespace** keyword is illegal.
 
 Full list: [tsconfig-defaults-and-breaks.md](tsconfig-defaults-and-breaks.md).

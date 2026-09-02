@@ -23,7 +23,7 @@ Symptom → decision → page. Use when `tsc` is red, emit looks wrong, a tool c
 1. Re-run the **project** `tsc` (probe first if you have not).
 2. Copy the **error code and text**. Do not “fix” from a blog-memory of TS 4.
 3. Match a symptom below. Open **one** target page.
-4. If nothing matches: `npx tsc --showConfig`, then [tsconfig-defaults-and-breaks.md](tsconfig-defaults-and-breaks.md).
+4. If nothing matches: invoke the probe's `compilerPath` with `--showConfig`, then [tsconfig-defaults-and-breaks.md](tsconfig-defaults-and-breaks.md).
 
 ## Symptom index
 

@@ -50,7 +50,7 @@ These are **not** warnings:
 - `esModuleInterop: false` / `allowSyntheticDefaultImports: false`
 - `alwaysStrict: false`
 - `module` **keyword** as a namespace declaration
-- `asserts` on imports (static and dynamic) — use `with`
+- import assertions using `assert { ... }` (static and dynamic) — use import attributes with `with`
 - `/// <reference no-default-lib="true" />` under `skipDefaultLibCheck` (7.0 blog: no-default-lib directives no longer respected under that flag)
 - CLI file paths when cwd contains a `tsconfig.json`, unless `--ignoreConfig`
 

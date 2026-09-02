@@ -70,8 +70,8 @@ Set these **explicitly** if you need the old behavior; 7.0 will not imply them.
 ```json
 {
   "devDependencies": {
-    "@typescript/native": "npm:typescript@^7.0.2",
-    "typescript": "npm:@typescript/typescript6@^6.0.2"
+    "@typescript/native": "npm:typescript@7.0.2",
+    "typescript": "npm:@typescript/typescript6@6.0.2"
   }
 }
 ```

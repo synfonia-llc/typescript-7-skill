@@ -17,7 +17,7 @@ Authority for every page in this skill: which TypeScript 7 we mean, which docume
 
 - USE WHEN citing this skill’s version, the VSIX, or a Microsoft blog — quote the pin below, then the live `tsc --version`.
 - USE WHEN the installed compiler is not 7.0.2 — follow the live callout protocol in `SKILL.md`; do not silently apply 5.x advice.
-- USE WHEN a page is silent on a CLI flag — run `npx tsc --help` / `npx tsc --showConfig`. Do not invent flags.
+- USE WHEN a page is silent on a CLI flag — invoke the probe's exact `compilerPath` with `--help` or `--showConfig`. Do not invent flags.
 - USE WHEN a page is silent on JSDoc or `.js` checking — read typescript-go `CHANGES.md`, then [javascript-and-jsdoc.md](javascript-and-jsdoc.md).
 
 ## Pin
@@ -33,7 +33,7 @@ Authority for every page in this skill: which TypeScript 7 we mean, which docume
 | Checker | Native Go port of the **6.0** checker (`microsoft/typescript-go`) |
 | Preview executable name | `tsgo` (retired for GA; the binary is `tsc`) |
 | Old JS compiler + API | Strada / TypeScript 6 (`@typescript/typescript6`, `tsc6`) |
-| Stable programmatic API | **None in 7.0.** Aimed at 7.1 (~Nov 2026). |
+| Stable programmatic API | **None in 7.0.** Later releases require live verification. |
 
 7.0 type-checks like 6.0 with `stableTypeOrdering` on and **without** `ignoreDeprecations`.
 
@@ -47,6 +47,7 @@ Read at author time. Prefer the installed binary when they disagree.
 4. The pin VSIX: `typescriptteam.native-preview-0.20260708.2-win32-x64` — extension `package.json`, `package.nls.json`, `readme.md`, bundled `lib/*.d.ts` **names and summarized APIs only**.
 5. [typescript-go `_extension/package.json`](https://github.com/microsoft/typescript-go/blob/main/_extension/package.json) — live command and setting names; the pin VSIX wins when they differ.
 6. Official handbook — **gap-fill only**, rewritten in this skill’s voice. Never pasted.
+7. [Node.js 22 release announcement](https://nodejs.org/en/blog/announcements/v22-release-announce) — V8 12.4 runtime support for `Array.fromAsync`, Set methods, and iterator helpers.
 
 ## What we refuse to copy
 
@@ -60,10 +61,10 @@ Read at author time. Prefer the installed binary when they disagree.
 From the TypeScript project directory:
 
 ```text
-node <skill-root>/scripts/probe.mjs
-npx tsc --version
-npx tsc --showConfig
-npx tsc --help
+node <skill-root>/scripts/probe.mjs --json
+<compilerPath-from-probe> --version
+<compilerPath-from-probe> --showConfig
+<compilerPath-from-probe> --help
 ```
 
 Editor: read the installed `TypeScriptTeam.native-preview` extension `package.json`.

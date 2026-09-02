@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "knowledgePin": "7.0.2",
+  "cases": [
+    {
+      "id": "ts7-existing-diagnostic",
+      "prompt": "This repository already uses typescript@7.0.2. Fix the native tsc error in src/report.ts.",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/diagnosing-failures.md"],
+      "requiredBehaviors": ["Run the local-only probe before applying pin-specific guidance.", "Keep the verified native compiler authoritative."],
+      "forbiddenBehaviors": ["Search a registry for tsc.", "Downgrade the compiler to make the error disappear."]
+    },
+    {
+      "id": "explicit-ts5-to-ts7-migration",
+      "prompt": "Migrate this TypeScript 5.9 repository to TypeScript 7.0.2 and preserve its lint tooling.",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/migrating-to-7.md", "references/install-and-dual-stack.md"],
+      "requiredBehaviors": ["Treat the migration request as explicit authorization.", "Check whether tooling imports the compiler API."],
+      "forbiddenBehaviors": ["Invent a TypeScript 7.0 compiler API."]
+    },
+    {
+      "id": "ordinary-ts6-edit",
+      "prompt": "This project intentionally stays on TypeScript 6.0.2. Add a typed retry helper; do not upgrade dependencies.",
+      "shouldActivate": false,
+      "expectedRoutes": [],
+      "requiredBehaviors": ["Respect the intentional TypeScript 6 boundary."],
+      "forbiddenBehaviors": ["Run a TypeScript 7 migration.", "Install TypeScript 7."]
+    },
+    {
+      "id": "ordinary-unspecified-typescript-edit",
+      "prompt": "Add a small TypeScript function that normalizes an accession number.",
+      "shouldActivate": false,
+      "expectedRoutes": [],
+      "requiredBehaviors": ["Use repository evidence and ordinary TypeScript knowledge."],
+      "forbiddenBehaviors": ["Assume the project targets TypeScript 7."]
+    },
+    {
+      "id": "uninitialized-directory",
+      "prompt": "In this empty directory, sketch a TypeScript example, but do not initialize a package or install anything.",
+      "shouldActivate": false,
+      "expectedRoutes": [],
+      "requiredBehaviors": ["Honor the no-initialization instruction."],
+      "forbiddenBehaviors": ["Resolve or install a package named tsc.", "Create package.json."]
+    },
+    {
+      "id": "ts7-eslint-api-failure",
+      "prompt": "Our TypeScript 7 CLI works, but typescript-eslint now fails while importing typescript. Diagnose the toolchain.",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/no-compiler-api.md", "references/install-and-dual-stack.md"],
+      "requiredBehaviors": ["Keep native TypeScript 7 for authoritative typechecking.", "Use a supported TypeScript 6 Strada sidecar for API consumers."],
+      "forbiddenBehaviors": ["Claim that TypeScript 7.0 exports createProgram."]
+    },
+    {
+      "id": "typedoc-in-ts7-project",
+      "prompt": "TypeDoc is part of this TypeScript 7.0.2 project. Make documentation generation coexist with the native compiler.",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/no-compiler-api.md", "references/install-and-dual-stack.md"],
+      "requiredBehaviors": ["Treat native tsc as the compile/declaration authority.", "Inspect TypeDoc's installed compiler compatibility before selecting the sidecar."],
+      "forbiddenBehaviors": ["Treat TypeDoc's compiler result as the TypeScript 7 oracle."]
+    },
+    {
+      "id": "node22-iterator-helpers",
+      "prompt": "In our Node 22 and TypeScript 7 project, can we use Iterator.prototype.map without a polyfill?",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/lib-es2025.md", "references/lib-inventory.md"],
+      "requiredBehaviors": ["Recognize that Node 22 ships iterator helpers.", "Still verify the declared minimum Node 22 release used by the project."],
+      "forbiddenBehaviors": ["Claim that Node 22 lacks iterator helpers."]
+    },
+    {
+      "id": "node22-temporal-boundary",
+      "prompt": "Temporal types appear in this TypeScript 7 project targeting Node 22. Is runtime support guaranteed?",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/lib-esnext.md", "references/lib-inventory.md"],
+      "requiredBehaviors": ["Separate bundled declarations from runtime support."],
+      "forbiddenBehaviors": ["Infer Temporal support from lib.esnext alone.", "Infer all ESNext support from Node 22 iterator support."]
+    },
+    {
+      "id": "tsgo-preview-name",
+      "prompt": "This old build script still invokes tsgo and native-preview, but the repository has moved to TypeScript 7 GA. Update the commands.",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/start-here-and-versioning.md", "references/install-and-dual-stack.md"],
+      "requiredBehaviors": ["Distinguish preview names from the GA tsc package."],
+      "forbiddenBehaviors": ["Install native-preview as the default GA path."]
+    },
+    {
+      "id": "ts7-version-difference",
+      "prompt": "The project says TypeScript 7, but the installed native compiler reports 7.1.0. Apply this skill and fix the config.",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/start-here-and-versioning.md", "references/sources.md"],
+      "requiredBehaviors": ["Report the difference from the 7.0.2 knowledge pin.", "Read the installed help and official 7.1 release documentation before editing."],
+      "forbiddenBehaviors": ["Apply 7.0.2-specific removals blindly.", "Guess the later compiler API shape."]
+    },
+    {
+      "id": "editor-cli-disagreement",
+      "prompt": "VS Code is using the TypeScript 7 language server, but the verified local TypeScript 7 CLI is red. Make the error go away.",
+      "shouldActivate": true,
+      "expectedRoutes": ["references/editor-lsp-and-vsix.md", "references/diagnosing-failures.md"],
+      "requiredBehaviors": ["Diagnose source or effective tsconfig using the CLI result."],
+      "forbiddenBehaviors": ["Toggle the language server as a typecheck fix."]
+    }
+  ]
+}

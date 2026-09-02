@@ -21,7 +21,7 @@ The **language** of modules as 7.0 will type-check it: `import` / `export`, type
 - USE WHEN writing `import` / `export` in `.ts` — follow the project’s effective `module` + `moduleResolution` from `tsc --showConfig`.
 - USE WHEN `verbatimModuleSyntax` or `isolatedModules` errors on a type imported as a value — use `import type`.
 - USE WHEN Node ESM resolution fails at runtime but `tsc` passed — you likely omitted the `.js` specifier `nodenext` requires.
-- USE WHEN `import x assert { type: "json" }` fails — write `with`. 7.0 hard-errors `asserts` on static and dynamic import.
+- USE WHEN `import x assert { type: "json" }` fails — write `with`. 7.0 hard-errors the old import-assertion syntax in static and dynamic imports.
 - USE WHEN `baseUrl` or `moduleResolution: node` appears in tsconfig — those flags are **removed**. [tsconfig-defaults-and-breaks.md](tsconfig-defaults-and-breaks.md).
 
 ## Type vs value imports

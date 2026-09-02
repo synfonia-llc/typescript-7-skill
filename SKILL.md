@@ -1,103 +1,155 @@
 ---
 name: typescript-7
 description: >-
-  TypeScript 7 (native Go compiler, bundled 7.0.2) language and thin toolchain
-  for agents: write .ts/.tsx/.d.ts that typechecks under 7.0 defaults; migrate
-  5.x/6.0 tsconfig (hard errors, no ignoreDeprecations); run tsc
-  (--checkers/--builders/--singleThreaded); dual-stack tsc vs tsc6 when tools
-  import the Strada API; JSDoc rewritten to match .ts; Unicode template-literal
-  infer; lib.es2025/esnext vs runtime. Use when writing or editing TypeScript,
-  running tsc, editing tsconfig, fixing tsc diagnostics, migrating TypeScript
-  5 or 6 to 7, checking JS with JSDoc, or when the user mentions TypeScript 7,
-  tsgo, native-preview, Strada, or typescript@7.
+  Use when a repository explicitly targets TypeScript 7, the user requests a
+  TypeScript 7 migration, or a task concerns native tsc/LSP behavior,
+  TypeScript 7 diagnostics or defaults, tsgo/native-preview, Strada, the
+  missing TypeScript 7.0 compiler API, or tools that import "typescript" in a
+  TypeScript 7 project. Not for ordinary TypeScript 5/6 work or migrations the
+  user did not request.
 ---
 
 # TypeScript 7
 
-Use TypeScript 7 from evidence, not 5.x memory. This skill is pinned to:
+Apply TypeScript 7 guidance only after establishing that TypeScript 7 is in
+scope. This skill's knowledge pin is **TypeScript 7.0.2** and VS Code/Cursor
+extension **TypeScriptTeam.native-preview 0.20260708.2**. TypeScript 7.0 is the
+native Go port of the TypeScript 6.0 checker; it is not a new type system.
 
-- VS Code / Cursor extension **TypeScriptTeam.native-preview 0.20260708.2**
-- `bundledTypeScriptVersion` **7.0.2**
-- Official 7.0 GA notes (native `tsc`, LSP, no stable API) and 6.0 notes (defaults 7.0 hard-errors)
-- [microsoft/typescript-go CHANGES.md](https://github.com/microsoft/typescript-go/blob/main/CHANGES.md) for JS/JSDoc deltas
+## Establish scope first
 
-7.0 is a **Go port of the 6.0 checker**, not a new type system. Language pages document the **6/7 type system** plus **7.0-only** language, toolchain, and bundled libs. Open **one** reference for the current job.
+From the project directory, run:
 
-This skill teaches the **language as an agent must produce it**. The compiler is only the judge of that language. It does not teach React, Vue, Svelte, Angular, webpack, or eslint rule authoring.
+```text
+node <this-skill-root>/scripts/probe.mjs --json
+```
 
-Provenance: [sources.md](references/sources.md).
+Do not read the probe source merely to use it. Interpret its result literally:
 
-## Standing guardrails
+- `ready` — use the routed TypeScript 7 guidance below.
+- `version-difference`, `sidecar-version-difference`,
+  `sidecar-layout-unverified`, or `compiler-layout-unsupported` — stop
+  applying pin-specific advice; inspect the installed version's help/release
+  notes, the consumer's supported compiler range/import path, or the
+  repository's trusted local compiler script before proceeding.
+- `invalid-package-json` — repair the package manifest before making any
+  compiler, source, or configuration change.
+- `declared-not-installed`, `compiler-unusable`, `compiler-mismatch`, or any
+  `sidecar-unusable`, `sidecar-mismatch`, or `declared-sidecar-*` status —
+  repair or install the already-declared dependency before changing source,
+  tsconfig, or API-based tooling.
+- `uninitialized` or `not-targeting-typescript-7` — do **not** initialize,
+  install, or migrate anything unless the user explicitly authorized that
+  change.
 
-- USE WHEN beginning any TypeScript task: **run** `node <this-skill-root>/scripts/probe.mjs` with cwd set to the TypeScript project. Do not read the script source. If the project claims 7 and the binary is 5.x/6.x, stop and fix the install before editing tsconfig.
-- USE WHEN `import * as ts from "typescript"` (or `from "typescript"`) appears: that is the **Strada** (JS) API. 7.0 does not ship a stable replacement. Dual-install 6.0 for tools that still import it, or wait for 7.1. See [no-compiler-api.md](references/no-compiler-api.md).
-- USE WHEN writing tsconfig: 7.0 **cannot** `ignoreDeprecations: "6.0"`. Removed flags are hard errors. See [tsconfig-defaults-and-breaks.md](references/tsconfig-defaults-and-breaks.md).
-- USE WHEN `dist/` contains `src/` (`dist/src/index.js`): `rootDir` now defaults to the tsconfig directory. Set `"rootDir": "./src"`.
-- USE WHEN `process`, `describe`, or Node builtins are “not found”: `types` now defaults to `[]`. List `"types": ["node"]` (and jest/mocha/bun as needed).
-- USE WHEN a name exists in lib but crashes at runtime: lib is a **type** environment. Node 22 does not implement Temporal, Iterator helpers, `using`, Float16, etc. unless the runtime or a polyfill does. See [lib-inventory.md](references/lib-inventory.md).
-- USE WHEN inventing a compiler flag: run `npx tsc --help`. Only `--checkers`, `--builders`, and `--singleThreaded` are documented here as 7.0-new.
-- USE WHEN fixing a red `tsc` by toggling the TypeScript 7 language server: that is the wrong lever. Fix the source or tsconfig. Editor settings live in [editor-lsp-and-vsix.md](references/editor-lsp-and-vsix.md).
+The probe resolves only the project-local compiler. It never asks a package
+manager or registry to find a package named `tsc`.
 
-## Contents
+## Non-negotiable rules
 
-- [Standing guardrails](#standing-guardrails)
-- [Jobs](#jobs)
-- [Language](#language)
-- [Compiler (thin)](#compiler-thin)
-- [Lib](#lib)
-- [Live callout protocol](#live-callout-protocol)
+- Treat the verified project-local `tsc` as the compile and declaration-emit
+  authority. Invoke the absolute `compilerPath` returned by a `ready` probe
+  directly for ad hoc CLI inspection. Use an existing package script only
+  after confirming it reaches that compiler. Do not put a package-name runner
+  back between the agent and the already-resolved executable.
+- TypeScript 7.0 has no stable programmatic `import "typescript"` API. Tools
+  that need that API use the TypeScript 6.0 Strada sidecar; do not invent a
+  native API. See [no-compiler-api.md](references/no-compiler-api.md).
+- TypeScript 7.0 enforces the TypeScript 6.0 defaults and removals. It cannot
+  escape them with `ignoreDeprecations: "6.0"`. See
+  [tsconfig-defaults-and-breaks.md](references/tsconfig-defaults-and-breaks.md).
+- A bundled `lib` declaration proves a type exists, not that the runtime
+  implements it. Check the project's minimum runtime feature by feature. Node
+  22 already includes iterator helpers, `Array.fromAsync`, and Set methods; it
+  does not thereby implement every ES2025 or ESNext API. See
+  [lib-inventory.md](references/lib-inventory.md).
+- Editor language-server state is independent of CLI correctness. Never fix a
+  red CLI typecheck by toggling the editor server. See
+  [editor-lsp-and-vsix.md](references/editor-lsp-and-vsix.md).
+- Open the one reference that owns the current job. Do not load the entire
+  reference tree.
 
-## Jobs
+## Route the current job
 
-- USE WHEN writing or editing `.ts` / `.tsx` / `.d.ts` that must typecheck on 7.0: [writing-typescript.md](references/writing-typescript.md).
-- USE WHEN moving a 5.x or 6.0 project onto 7.0, or when `ignoreDeprecations` appears: [migrating-to-7.md](references/migrating-to-7.md).
-- USE WHEN `tsc` is red, emit paths look wrong, eslint cannot load `typescript`, or the editor disagrees with CLI: [diagnosing-failures.md](references/diagnosing-failures.md).
+### Start, write, migrate, or diagnose
 
-## Language
+- Write or edit `.ts`, `.tsx`, or `.d.ts` in a verified 7.x project:
+  [writing-typescript.md](references/writing-typescript.md).
+- Migrate a project to 7.0 when the user requested it:
+  [migrating-to-7.md](references/migrating-to-7.md).
+- Diagnose compiler, emit, tool-loading, or editor disagreement:
+  [diagnosing-failures.md](references/diagnosing-failures.md).
 
-- USE WHEN choosing primitives, arrays, tuples, `any` / `unknown` / `never`, or type vs value: [types-everyday.md](references/types-everyday.md).
-- USE WHEN narrowing with `typeof`, `in`, equality, truthiness, or user-defined type predicates: [narrowing-and-control-flow.md](references/narrowing-and-control-flow.md).
-- USE WHEN writing functions, overloads, rest parameters, or `this`; or when method-syntax inference looks order-dependent: [functions-and-call-signatures.md](references/functions-and-call-signatures.md).
-- USE WHEN writing object types, interfaces, excess-property checks, index signatures, or `exactOptionalPropertyTypes`: [objects-and-interfaces.md](references/objects-and-interfaces.md).
-- USE WHEN writing unions, intersections, discriminants, or `never` exhaustiveness: [unions-intersections-and-never.md](references/unions-intersections-and-never.md).
-- USE WHEN writing generics, constraints, inference, or variance: [generics-inference-and-variance.md](references/generics-inference-and-variance.md).
-- USE WHEN writing `keyof`, `typeof`, indexed access, mapped types, or conditional types: [type-manipulation.md](references/type-manipulation.md).
-- USE WHEN splitting template-literal types, branding strings, or seeing emoji/surrogate `infer` change: [template-literals-and-infer.md](references/template-literals-and-infer.md).
-- USE WHEN writing classes, `this`, parameter properties, or definite assignment: [classes-and-this.md](references/classes-and-this.md).
-- USE WHEN writing TC39 decorators or `Symbol.metadata`: [decorators.md](references/decorators.md).
-- USE WHEN writing `import` / `export`, `type` vs value, `with` import attributes, `#/` subpaths, `nodenext` / `bundler`, or `verbatimModuleSyntax`: [modules-imports-and-exports.md](references/modules-imports-and-exports.md).
-- USE WHEN writing TSX / JSX *syntax* or choosing `compilerOptions.jsx` (not React component patterns): [jsx-syntax.md](references/jsx-syntax.md).
-- USE WHEN writing `using` / `await using` or `DisposableStack`: [using-and-disposables.md](references/using-and-disposables.md).
-- USE WHEN type-checking `.js` / JSDoc / `checkJs`, `@typedef`, expandos, or constructor functions: [javascript-and-jsdoc.md](references/javascript-and-jsdoc.md).
-- USE WHEN writing `.d.ts` or when `isolatedDeclarations` rejects inferred exports: [declaration-files.md](references/declaration-files.md).
-- USE WHEN reaching for `Partial`, `Pick`, `Omit`, `Record`, `Awaited`, or other lib utility types: [utility-types.md](references/utility-types.md).
+### Language
 
-## Compiler (thin)
+- Everyday values, primitives, arrays, tuples, `any`, `unknown`, and `never`:
+  [types-everyday.md](references/types-everyday.md).
+- Narrowing and control flow:
+  [narrowing-and-control-flow.md](references/narrowing-and-control-flow.md).
+- Functions, overloads, rest parameters, and `this`:
+  [functions-and-call-signatures.md](references/functions-and-call-signatures.md).
+- Object types, interfaces, optional properties, and index signatures:
+  [objects-and-interfaces.md](references/objects-and-interfaces.md).
+- Unions, intersections, discriminants, and exhaustiveness:
+  [unions-intersections-and-never.md](references/unions-intersections-and-never.md).
+- Generics, constraints, inference, and variance:
+  [generics-inference-and-variance.md](references/generics-inference-and-variance.md).
+- `keyof`, indexed access, mapped types, and conditional types:
+  [type-manipulation.md](references/type-manipulation.md).
+- Template-literal types and the TypeScript 7 Unicode `infer` change:
+  [template-literals-and-infer.md](references/template-literals-and-infer.md).
+- Classes and `this`:
+  [classes-and-this.md](references/classes-and-this.md).
+- TC39 decorators and `Symbol.metadata`:
+  [decorators.md](references/decorators.md).
+- Modules, type-only imports, import attributes, and resolution modes:
+  [modules-imports-and-exports.md](references/modules-imports-and-exports.md).
+- JSX/TSX syntax and `compilerOptions.jsx`:
+  [jsx-syntax.md](references/jsx-syntax.md).
+- `using`, `await using`, and disposables:
+  [using-and-disposables.md](references/using-and-disposables.md).
+- Checked JavaScript and JSDoc:
+  [javascript-and-jsdoc.md](references/javascript-and-jsdoc.md).
+- Declaration files and `isolatedDeclarations`:
+  [declaration-files.md](references/declaration-files.md).
+- Standard utility types:
+  [utility-types.md](references/utility-types.md).
 
-- USE WHEN deciding what “TypeScript 7” is, how it relates to 6.0/5.x, or which binary you are running: [start-here-and-versioning.md](references/start-here-and-versioning.md).
-- USE WHEN installing `typescript@7`, aliasing `@typescript/typescript6`, CI `tsc` vs `tsc6`, or nightlies: [install-and-dual-stack.md](references/install-and-dual-stack.md).
-- USE WHEN a 5.x/6.0 tsconfig fails on 7.0, or when setting `strict` / `module` / `target` / `types` / `rootDir`: [tsconfig-defaults-and-breaks.md](references/tsconfig-defaults-and-breaks.md).
-- USE WHEN choosing a `compilerOptions` flag that changes what source is legal (`nodenext`, `verbatimModuleSyntax`, `exactOptionalPropertyTypes`, `isolatedDeclarations`, `strict` family): [compiler-options.md](references/compiler-options.md).
-- USE WHEN running `tsc`, `--build`, `--watch`, `--checkers`, `--builders`, or `--singleThreaded`: [cli-watch-and-parallelism.md](references/cli-watch-and-parallelism.md).
-- USE WHEN enabling/disabling the TypeScript 7 language server, `js/ts.*` settings, or workspace `tsdk`: [editor-lsp-and-vsix.md](references/editor-lsp-and-vsix.md).
-- USE WHEN using project references, solution-style tsconfig, or declaration emit across packages: [project-references-and-build.md](references/project-references-and-build.md).
-- USE WHEN a tool, transformer, eslint parser, or `ts-morph` script imports `"typescript"`: [no-compiler-api.md](references/no-compiler-api.md).
+### Compiler and editor
 
-## Lib
+- Product names, version relationships, and binary identity:
+  [start-here-and-versioning.md](references/start-here-and-versioning.md).
+- Exact installation, dual-stack aliases, CI, and nightlies:
+  [install-and-dual-stack.md](references/install-and-dual-stack.md).
+- Source-affecting compiler options:
+  [compiler-options.md](references/compiler-options.md).
+- CLI, build, watch, and native parallelism:
+  [cli-watch-and-parallelism.md](references/cli-watch-and-parallelism.md).
+- Project references and solution builds:
+  [project-references-and-build.md](references/project-references-and-build.md).
 
-- USE WHEN choosing `lib` vs `target`, listing bundled `.d.ts` names, or deciding DOM vs Node: [lib-inventory.md](references/lib-inventory.md).
-- USE WHEN using Iterator helpers, `Promise.try`, `Float16Array`, Set algebra, `RegExp.escape`, or `Intl.DurationFormat`: [lib-es2025.md](references/lib-es2025.md).
-- USE WHEN using `using` / `DisposableStack`, `Temporal`, `Map.getOrInsert`, `Atomics.pause`, `Array.fromAsync`, `Uint8Array.toBase64`, or `Error.isError`: [lib-esnext.md](references/lib-esnext.md).
-- USE WHEN citing this skill’s pin, the VSIX, or Microsoft blogs: [sources.md](references/sources.md).
+### Bundled libraries and runtime boundaries
 
-## Live callout protocol
+- `lib`, `target`, `types`, DOM/Node separation, and bundled lib names:
+  [lib-inventory.md](references/lib-inventory.md).
+- ES2025 library surfaces:
+  [lib-es2025.md](references/lib-es2025.md).
+- ESNext library surfaces:
+  [lib-esnext.md](references/lib-esnext.md).
 
-When a local page is silent or the installed `tsc` differs from 7.0.2:
+### Provenance
 
-1. Run `scripts/probe.mjs` (cwd = the project). Record `tsc --version` and the `typescript` field in `package.json`.
-2. Open the owning reference below (do not load every page).
-3. Run `npx tsc --help` or `npx tsc --showConfig` rather than inventing flags.
-4. For editor behavior, read the installed extension’s `package.json` / `package.nls.json`.
-5. For JS/JSDoc deltas, read [microsoft/typescript-go CHANGES.md](https://github.com/microsoft/typescript-go/blob/main/CHANGES.md).
-6. For language-server gaps, check [microsoft/typescript-go issues](https://github.com/microsoft/typescript-go/issues).
-7. State the version difference. Do not silently fall back to 5.x advice, invent a 7.0 compiler API, or claim a lib type exists at runtime.
+- Knowledge pin, primary sources, live verification, and license boundaries:
+  [sources.md](references/sources.md).
+
+## When local evidence differs
+
+If the installed compiler differs from 7.0.2 or a routed page is silent:
+
+1. State the exact version difference.
+2. Use the installed compiler's `--help` or `--showConfig`; do not invent flags.
+3. Consult the official TypeScript release note or typescript-go `CHANGES.md`
+   for the affected behavior.
+4. Keep TypeScript 6 advice isolated to the Strada sidecar. Never silently
+   substitute it for TypeScript 7 behavior.
+5. Verify runtime support separately from TypeScript's bundled declarations.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-Flags that change **what source is legal** on 7.0, not a reprint of every tsconfig key. Inventing flags is forbidden: run `npx tsc --help`. 7.0-new CLI flags: [cli-watch-and-parallelism.md](cli-watch-and-parallelism.md). Defaults/removals: [tsconfig-defaults-and-breaks.md](tsconfig-defaults-and-breaks.md).
+Flags that change **what source is legal** on 7.0, not a reprint of every tsconfig key. Inventing flags is forbidden: invoke the probe's `compilerPath` with `--help`. 7.0-new CLI flags: [cli-watch-and-parallelism.md](cli-watch-and-parallelism.md). Defaults/removals: [tsconfig-defaults-and-breaks.md](tsconfig-defaults-and-breaks.md).
 
 ## Contents
 
@@ -24,7 +24,7 @@ Flags that change **what source is legal** on 7.0, not a reprint of every tsconf
 
 ## How to choose
 
-1. `npx tsc --showConfig` — the **effective** config, not the file you think you edited.
+1. `<compilerPath-from-probe> --showConfig` — the **effective** config, not the file you think you edited.
 2. Change one flag, re-run `tsc`.
 3. Do not copy a 5.x “strictest tsconfig” gist that sets `moduleResolution: node` or `target: es5`.
 
