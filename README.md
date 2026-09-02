@@ -19,13 +19,13 @@ If you are searching for `tsgo`, `native-preview`, Corsa vs Strada, `ignoreDepre
 **For the agent:** a scope gate so it does not fire on ordinary TypeScript 5/6 work; a local-only probe that names the real `tsc`; one reference page per job instead of the whole tree; a pin so advice does not drift to a nightly.
 
 ```mermaid
-flowchart LR
-  task[Agent task] --> scope{TypeScript 7 in scope?}
-  scope -->|no| stay[Use ordinary TypeScript 5/6 knowledge]
-  scope -->|yes| probe["Run scripts/probe.mjs"]
-  probe --> ready{status ready?}
-  ready -->|yes| page[Open one reference and verify with local tsc]
-  ready -->|no| stop[Stop, repair, or wait for an explicit migrate]
+graph LR
+  task["Agent task"] --> scope{"TypeScript 7 in scope"}
+  scope -->|no| stay["Stay on TypeScript 5 or 6"]
+  scope -->|yes| probe["Run probe script"]
+  probe --> ready{"Probe ready"}
+  ready -->|yes| page["Open one reference then verify"]
+  ready -->|no| stop["Stop or repair"]
 ```
 
 ## What this skill can do
