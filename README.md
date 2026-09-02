@@ -4,11 +4,9 @@
 [![TypeScript 7.0.2](https://img.shields.io/badge/TypeScript-7.0.2-3178C6?logo=typescript&logoColor=white)](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-SKILL.md-111111)](https://agentskills.io/specification)
 
-An [Agent Skill](https://agentskills.io/specification) that teaches **Cursor**, **Claude Code**, **Codex**, **GitHub Copilot**, **Gemini CLI**, and other coding agents how to write, migrate, and diagnose **TypeScript 7** — the native Go `tsc` (Corsa), not a new type system.
+An Agent Skill that teaches **Cursor**, **Claude Code**, **Codex**, **GitHub Copilot**, **Gemini CLI**, and other coding agents how to write, migrate, and diagnose **TypeScript 7** — the native Go `tsc` (Corsa), not a new type system.
 
-Pinned to **TypeScript 7.0.2** and the VS Code / Cursor extension `TypeScriptTeam.native-preview` **0.20260708.2**. Language facts apply on every OS.
-
-TypeScript 7.0 shipped 8 July 2026 as a faithful Go port of the **6.0 checker**. Generics, narrowing, and mapped types did not change. What *did* change — and what models trained on TypeScript 5 still get wrong — is the **defaults**, the **hard errors**, a handful of **language deltas** (Unicode template `infer`, JSDoc rewritten to match `.ts`), a new native **`tsc`**, native **LSP**, and **no stable `import "typescript"` compiler API**.
+TypeScript 7.0 shipped 8 July 2026 as a faithful Go port of the **6.0 checker**. Generics, narrowing, and mapped types did not change. What *did* change — and what models trained on TypeScript 5 still get wrong — is the **defaults**, the **hard errors**, a handful of **language deltas** (Unicode template `infer`, JSDoc rewritten to match `.ts`), a new native **`tsc`**, native **LSP**, and **no stable `import "typescript"` compiler API**.  Pinned to **TypeScript 7.0.2**.
 
 If you are searching for `tsgo`, `native-preview`, Corsa vs Strada, `ignoreDeprecations`, `createProgram`, `--checkers`, `Iterator.prototype.map`, `Temporal`, or `using` / `DisposableStack` on a TypeScript 7 project, this skill is the briefing your agent is missing.
 
@@ -17,16 +15,6 @@ If you are searching for `tsgo`, `native-preview`, Corsa vs Strada, `ignoreDepre
 **For you:** the agent stops “fixing” a red `tsc` by toggling the editor server, inventing flags, writing TypeScript 5 in a 7.0 tree, or “upgrading” eslint by pretending TypeScript 7 exports `ts.createProgram`. Migration follows the real map: 6.0 warned, 7.0 refuses.
 
 **For the agent:** a scope gate so it does not fire on ordinary TypeScript 5/6 work; a local-only probe that names the real `tsc`; one reference page per job instead of the whole tree; a pin so advice does not drift to a nightly.
-
-```mermaid
-graph LR
-  task["Agent task"] --> scope{"TypeScript 7 in scope"}
-  scope -->|no| stay["Stay on TypeScript 5 or 6"]
-  scope -->|yes| probe["Run probe script"]
-  probe --> ready{"Probe ready"}
-  ready -->|yes| page["Open one reference then verify"]
-  ready -->|no| stop["Stop or repair"]
-```
 
 ## What this skill can do
 
@@ -37,7 +25,6 @@ graph LR
 | Dual-stack tooling | Keep native `tsc` 7 for typecheck; keep TypeScript **6.0.2** Strada (`tsc6`, `import "typescript"`) for eslint, ts-morph, TypeDoc, webpack loaders |
 | Diagnose | Separate CLI `tsc` from editor LSP (`js/ts.experimental.useTsgo`), config from language, lib types from runtime |
 | Run native `tsc` | Invoke the probe’s `compilerPath`. Documented 7.0-new flags: `--checkers`, `--builders`, `--singleThreaded` |
-| Stay inside copyright | Summarize bundled lib APIs. Does not vendor Microsoft sources |
 
 It is **not** a beginner handbook, a React/Vue/Svelte/Angular course, or a trigger for every TypeScript edit. It activates when the repo or the user has put TypeScript 7 in scope.
 
@@ -403,7 +390,7 @@ New native-`tsc` parallelism. `--checkers` (default 4) partitions typecheck work
 
 ### Is this the official TypeScript handbook?
 
-No. It is an Agent Skill: a router plus one-hop references written so a coding agent will probe, open one page, and verify with the project-local compiler. Microsoft’s bundled libs, blogs, and VSIX stay under their own licenses. This skill does not vendor them.
+No. It is an Agent Skill: a router plus one-hop references written so a coding agent will probe, open one page, and verify with the project-local compiler. Microsoft’s bundled libs, blogs, and VSIX stay under their own licenses.
 
 ## Validate changes
 
@@ -418,7 +405,7 @@ The validator checks frontmatter boundaries, direct reference routing, relative 
 
 ## License
 
-Original skill prose and scripts: **MIT**. Microsoft TypeScript files, blogs, and the VSIX remain under their own licenses (Apache-2.0 for the compiler libs). This skill does **not** vendor those sources.
+Original skill prose and scripts: **MIT**. Microsoft TypeScript files, blogs, and the VSIX remain under their own licenses (Apache-2.0 for the compiler libs).
 
 Pin and primary sources: [references/sources.md](references/sources.md).
 
