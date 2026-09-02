@@ -1,12 +1,15 @@
 ---
 name: typescript-7
-description: >-
-  Use when a repository explicitly targets TypeScript 7, the user requests a
-  TypeScript 7 migration, or a task concerns native tsc/LSP behavior,
-  TypeScript 7 diagnostics or defaults, tsgo/native-preview, Strada, the
-  missing TypeScript 7.0 compiler API, or tools that import "typescript" in a
-  TypeScript 7 project. Not for ordinary TypeScript 5/6 work or migrations the
-  user did not request.
+description: "Use when a repository explicitly targets TypeScript 7 / TS7, the user requests a TypeScript 7 migration, or a task concerns native tsc/LSP, TypeScript 7 diagnostics or defaults, tsgo, native-preview, Corsa, Strada, the missing TypeScript 7.0 compiler API, or tools that import \"typescript\" in a TypeScript 7 project. Not for ordinary TypeScript 5/6 work or migrations the user did not request."
+license: MIT
+compatibility: Requires Node.js to run scripts/probe.mjs against a project-local TypeScript compiler. Works with Agent Skills hosts including Cursor, Claude Code, Codex, GitHub Copilot, and Gemini CLI.
+icon: code
+color: blue
+metadata:
+  author: Synfonia LLC
+  pin: typescript@7.0.2
+  homepage: https://synfonia.io
+  keywords: TypeScript 7, TS7, tsgo, Corsa, Strada, native-preview, createProgram, Agent Skills
 ---
 
 # TypeScript 7

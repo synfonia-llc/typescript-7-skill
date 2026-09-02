@@ -1,0 +1,6 @@
+---
+description: This checkout is the TypeScript 7 Agent Skill repository, not a TypeScript 7 application.
+alwaysApply: true
+---
+
+Follow [AGENTS.md](../../AGENTS.md). Canonical skill: [SKILL.md](../../SKILL.md). Run `node scripts/validate-skill.mjs` after skill edits. Do not vendor Microsoft lib sources. Do not nest a second copy under `.agents/skills/typescript-7`.

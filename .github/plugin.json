@@ -1,0 +1,24 @@
+{
+  "name": "typescript-7",
+  "displayName": "TypeScript 7",
+  "version": "1.0.0",
+  "description": "Teach coding agents to write, migrate, and diagnose TypeScript 7.0.2 (native Go tsc / Corsa). Covers tsgo, Strada, missing createProgram API, ignoreDeprecations, and 7.0 defaults.",
+  "author": {
+    "name": "Synfonia LLC",
+    "url": "https://synfonia.io"
+  },
+  "homepage": "https://synfonia.io",
+  "license": "MIT",
+  "keywords": [
+    "typescript",
+    "typescript-7",
+    "tsgo",
+    "corsa",
+    "strada",
+    "native-preview",
+    "agent-skills"
+  ],
+  "skills": [
+    "."
+  ]
+}
