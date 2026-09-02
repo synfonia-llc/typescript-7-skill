@@ -1,4 +1,4 @@
-# TypeScript 7 Skill for Claude Code, Codex, Cursor, and other AI Coding Agents
+# TypeScript 7 Skill for Claude Code, Codex, Cursor, Antigravity, GitHub Copilot, and other AI Coding Agents
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![TypeScript 7.0.2](https://img.shields.io/badge/TypeScript-7.0.2-3178C6?logo=typescript&logoColor=white)](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)
