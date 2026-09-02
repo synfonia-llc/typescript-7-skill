@@ -1,0 +1,11 @@
+# Never vendor Microsoft TypeScript lib sources or VSIX blobs.
+*.vsix
+lib/
+**/lib.es*.d.ts
+**/lib.dom*.d.ts
+**/lib.webworker*.d.ts
+**/lib.scripthost.d.ts
+**/lib.decorators*.d.ts
+node_modules/
+.DS_Store
+*.log
